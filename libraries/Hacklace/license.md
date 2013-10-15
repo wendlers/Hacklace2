@@ -1,7 +1,7 @@
 HACKLACE SOFTWARE LICENSE
 =========================
 
-Copyright 2013 by Frank Andre
+Copyright 2013 of the hacklace software by Frank Andre
 
 ### License:
 This software is distributed under a hardware-bound GPL license as follows:
