@@ -1,26 +1,30 @@
 HACKLACE SOFTWARE LICENSE
 =========================
 
-Copyright 2013:		Frank Andre
-License:			This software is distributed under a hardware-bound GPL license as
-					follows:
-					(1) This software must only be executed on the original Hacklace2 
-					hardware as distributed by www.fab4U.de.
-					(2) As long as (1) is not violated this software is licensed under 
-					the GNU GPLv3 (see below).
-Disclaimer:			This software is provided by the copyright holder "as is" and any 
-					express or implied warranties, including, but not limited to, the 
-					implied warranties of merchantability and fitness for a particular 
-					purpose are disclaimed. In no event shall the copyright owner or 
-					contributors be liable for any direct, indirect, incidental, 
-					special, exemplary, or consequential damages (including, but not 
-					limited to, procurement of substitute goods or services; loss of 
-					use, data, or profits; or business interruption) however caused 
-					and on any theory of liability, whether in contract, strict 
-					liability, or tort (including negligence or otherwise) arising 
-					in any way out of the use of this software, even if advised of 
-					the possibility of such damage.
+Copyright 2013 by Frank Andre
 
+### License:
+This software is distributed under a hardware-bound GPL license as follows:
+
+(1) This software must only be executed on the original Hacklace2 hardware as 
+distributed by www.fab4U.de.
+
+(2) As long as (1) is not violated this software is licensed under the GNU GPLv3 
+(see below).
+
+### Disclaimer:
+This software is provided by the copyright holder "as is" and any 
+express or implied warranties, including, but not limited to, the 
+implied warranties of merchantability and fitness for a particular 
+purpose are disclaimed. In no event shall the copyright owner or 
+contributors be liable for any direct, indirect, incidental, 
+special, exemplary, or consequential damages (including, but not 
+limited to, procurement of substitute goods or services; loss of 
+use, data, or profits; or business interruption) however caused 
+and on any theory of liability, whether in contract, strict 
+liability, or tort (including negligence or otherwise) arising 
+in any way out of the use of this software, even if advised of 
+the possibility of such damage.
 
 
 GNU GENERAL PUBLIC LICENSE
