@@ -1,0 +1,9 @@
+HL						\# initialization sequence
+\00 33 01\knack\00\
+
+\00 33 08\\  1F 10: 01 ff 02 ff 04 ff 08 ff ff 02 ff 04 ff 08 ff 10 \\00\	\# two frame animation
+\00 33 11\Frank\00\
+\01\
+\1F\
+\00 33 21\-=[]=-\00\
+\FF\
