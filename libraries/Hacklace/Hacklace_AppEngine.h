@@ -10,7 +10,7 @@ Copyright 2013:		Frank Andre
 License:			This software is distributed under a hardware-bound GPL license as
 					follows:
 					(1) This software must only be executed on the original Hacklace2 
-					hardware as distributed by www.fab4U.de.
+					printed circuit board with the fab4U logo on it. 
 					(2) As long as (1) is not violated this software is licensed under 
 					the GNU GPLv3 (see license.md or http://www.gnu.org/licenses/).
 Disclaimer:			This software is provided by the copyright holder "as is" and any 
@@ -42,11 +42,7 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 
 // version
 #define HL_VERSION_MAJOR	0
-#define HL_VERSION_MINOR	2
-
-// Out-comment the following line if you do not want the hacklace to enter
-// download mode after a reset.
-#define ENTER_DOWNLOAD_AFTER_RESET
+#define HL_VERSION_MINOR	3
 
 // start and end address of text/animation data in EEPROM
 #define EE_START_ADDR		0x000
@@ -60,7 +56,8 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 #define VOLTMETER			4
 #define BATT_MONITOR		5
 #define FREQMETER			6
-#define EXAMPLE_APP			31
+#define EXAMPLE_APP			30
+#define RESET_APP			31
 
 // special App-ID (do not change)
 #define END_OF_LIST			255			// app_id value that indicates the end of the app list
@@ -75,13 +72,12 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 const char ee_default[] PROGMEM = {
 	ANIMATION, 0x76, 0x01, ' ', 'H', 'a', 'c', 'k', 'l', 'a', 'c', 'e', '2', ' ', SKULL, SPC1, 0,
 	ANIMATION, 0x85, 0x01, ' ', 'A', 'r', 'd', 'u', 'i', 'n', 'o', '-', 'k', 'o', 'm', 'p', 'a', 't', 'i', 'b', 'e', 'l', SPC8, 0,
-	ANIMATION, 0x85, 0x01, ' ', 'I', ' ', HEART, ' ', 'R', 'a', 'u', 'm', 'Z', 'e', 'i', 't', 'L', 'a', 'b', 'o', 'r', ' ', ' ', 0,
-	ANIMATION, 0x85, 0x01, ' ', 'E', '-', 'T', 'e', 'c', 'h', 'n', 'i', 'k', ' ', 16, 0,
+	ANIMATION, 0x85, 0x01, ' ', 'I', ' ', HEART, ' ', 'y', 'o', 'u', ' ', 'a', 'l', 'l', '!', ' ', ' ', 0,
+	ANIMATION, 0x86, 0x01, ' ', 'H', 'i', 'g', 'h', ' ', 'V', 'o', 'l', 't', 'a', 'g', 'e', ' ', 16, 0,
 //	ANIMATION, 0x76, NO_SCROLLING, HAPPY_SMILEY, 0,			// Smiley
 //	ANIMATION, 0x76, NO_SCROLLING, 0x1F, 8, 0x3E, 0x08, 0xFE, 0x80, 0x80, 0x19, 0x15, 0x12, 0,	// user defined character
 	ANIMATION, 0x54, 0x08, SPC1, SPC1, HEART, SPC8, SPC1, SPC1, HEART, SPC8, 0,	// Heartbeat
 	ANIMATION, 0x83, 0x21, 5, ' ', 6, ' ', 7, ' ', 8, 0,	// Monster
-//	ANIMATION, 0x4A, 0x08, ANI(0), 0,						// Heartbeat
 	ANIMATION, 0xB0, 0x08, ANI(1), 0,						// Fire
 	ANIMATION, 0x99, 0x01, ANI(2), 0,						// Plug-in
 	ANIMATION, 0x8B, 0x08, ANI(3), 0,						// Arrow

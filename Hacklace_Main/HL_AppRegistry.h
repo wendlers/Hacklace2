@@ -10,7 +10,7 @@ Copyright 2013:	Frank Andre
 License:	This software is distributed under a hardware-bound GPL license as
 		follows:
 		(1) This software must only be executed on the original Hacklace2 
-		hardware as distributed by www.fab4U.de.
+		printed circuit board with the fab4U logo on it.
 		(2) As long as (1) is not violated this software is licensed under 
 		the GNU GPLv3 (see license.md or http://www.gnu.org/licenses/).
 Disclaimer:	This software is provided by the copyright holder "as is" and any 
@@ -39,12 +39,14 @@ Disclaimer:	This software is provided by the copyright holder "as is" and any
 // include Hacklace apps
 #include "HL_AnimationApp.h"
 #include "HL_SpiralApp.h"
+#include "HL_CounterApp.h"
+#include "HL_GameOfLifeApp.h"
 #include "HL_VoltmeterApp.h"
 #include "HL_BatteryMonitorApp.h"
-#include "HL_CounterApp.h"
 #include "HL_FreqmeterApp.h"
-#include "HL_GameOfLifeApp.h"
+#include "HL_DisplayApp.h"
 #include "HL_ExampleApp.h"
+#include "HL_DownloadApp.h"
 
 
 // list of all available apps
@@ -80,7 +82,9 @@ const Hacklace_App* app_registry[MAX_APPS] PROGMEM = {
 	&ExampleApp,			// app-ID 28
 	&ExampleApp,			// app-ID 29
 	&ExampleApp,			// app-ID 30
-	&ExampleApp			// app-ID 31
+//	&DisplayApp			// app-ID 31 ResetApp
+	&DownloadApp			// app-ID 31 ResetApp
+					// This app is called after a system reset (NULL -> no app is called)
 };
 
 #endif /* APP_REGISTRY_H_ */

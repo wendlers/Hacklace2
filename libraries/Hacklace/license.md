@@ -6,8 +6,8 @@ Copyright 2013 of the hacklace software by Frank Andre
 ### License:
 This software is distributed under a hardware-bound GPL license as follows:
 
-(1) This software must only be executed on the original Hacklace2 hardware as 
-distributed by www.fab4U.de.
+(1) This software must only be executed on the original Hacklace2 printed 
+circuit board with the fab4U logo on it. 
 
 (2) As long as (1) is not violated this software is licensed under the GNU GPLv3 
 (see below).

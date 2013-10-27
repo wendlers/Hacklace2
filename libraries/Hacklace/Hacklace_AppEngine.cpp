@@ -12,7 +12,7 @@ Copyright 2013:		Frank Andre
 License:			This software is distributed under a hardware-bound GPL license as
 					follows:
 					(1) This software must only be executed on the original Hacklace2 
-					hardware as distributed by www.fab4U.de.
+					printed circuit board with the fab4U logo on it. 
 					(2) As long as (1) is not violated this software is licensed under 
 					the GNU GPLv3 (see license.md or http://www.gnu.org/licenses/).
 Disclaimer:			This software is provided by the copyright holder "as is" and any 
@@ -37,7 +37,6 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 #include "Arduino.h"
 #include "Hacklace.h"
 #include "Hacklace_AppEngine.h"
-#include "HL_DownloadApp.h"
 
 
 /************
@@ -53,10 +52,11 @@ Hacklace_AppEngine HL;		// instantiate a Hacklace_AppEngine
 
 // app registry
 extern const Hacklace_App* app_registry[MAX_APPS];
+extern const Hacklace_App* DownloadApp_ptr;
+
 
 // static class variables
 const unsigned char*	Hacklace_AppEngine::ee_ptr;
-//Hacklace_App*			Hacklace_AppEngine::app_registry[MAX_APPS];	// list of all available apps
 Hacklace_App*			Hacklace_AppEngine::app;					// pointer to current app
 
 
@@ -66,7 +66,7 @@ Hacklace_App*			Hacklace_AppEngine::app;					// pointer to current app
 
 void Hacklace_AppEngine::initialize()
 {
-	byte i, app_id;
+	byte app_id;
 	
 	Hacklace::initialize();
 
@@ -76,16 +76,13 @@ void Hacklace_AppEngine::initialize()
 		_delay_ms(1000);
 	}
 
-#ifdef ENTER_DOWNLOAD_AFTER_RESET
-	cursorHome();
-	app = &DownloadApp;
-	app->setup(EE_START_ADDR);
-#else
-	app = NULL;
-#endif
+	app = (Hacklace_App*) pgm_read_word(&app_registry[RESET_APP]);	// get ResetApp
+	if (app) {
+		cursorHome();
+		app->setup(EE_START_ADDR);
+	}
 
 	ee_ptr = EE_START_ADDR;
-//###	for (i=0; i< MAX_APPS; i++) { app_registry[i] = NULL; }	// clear app_registry
 	app_id = eeprom_read_byte(ee_ptr);						// peek first app_id
 	if (app_id == 0xFF) {									// eeprom empty?
 		copyToEeprom(ee_default, sizeof(ee_default));		// -> load default data
@@ -173,7 +170,7 @@ void Hacklace_AppEngine::enterPowerDown()
 		while ((PIN(BTN_PORT) & BUTTON2) == 0) {}	// wait for button to be released
 		_delay_ms(20);								// wait until bouncing has decayed
 		clearDisplay();
-		app = &DownloadApp;
+		app = (Hacklace_App*) DownloadApp_ptr;
 		app->setup(EE_START_ADDR);					// enter download mode
 	}
 }
