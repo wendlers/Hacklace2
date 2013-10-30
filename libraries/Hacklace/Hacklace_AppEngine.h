@@ -7,12 +7,7 @@
 
 Author:				Frank Andre
 Copyright 2013:		Frank Andre
-License:			This software is distributed under a hardware-bound GPL license as
-					follows:
-					(1) This software must only be executed on the original Hacklace2 
-					printed circuit board with the fab4U logo on it. 
-					(2) As long as (1) is not violated this software is licensed under 
-					the GNU GPLv3 (see license.md or http://www.gnu.org/licenses/).
+License:			see "license.md"
 Disclaimer:			This software is provided by the copyright holder "as is" and any 
 					express or implied warranties, including, but not limited to, the 
 					implied warranties of merchantability and fitness for a particular 
@@ -73,7 +68,7 @@ const char ee_default[] PROGMEM = {
 	ANIMATION, 0x76, 0x01, ' ', 'H', 'a', 'c', 'k', 'l', 'a', 'c', 'e', '2', ' ', SKULL, SPC1, 0,
 	ANIMATION, 0x85, 0x01, ' ', 'A', 'r', 'd', 'u', 'i', 'n', 'o', '-', 'k', 'o', 'm', 'p', 'a', 't', 'i', 'b', 'e', 'l', SPC8, 0,
 	ANIMATION, 0x85, 0x01, ' ', 'I', ' ', HEART, ' ', 'y', 'o', 'u', ' ', 'a', 'l', 'l', '!', ' ', ' ', 0,
-	ANIMATION, 0x86, 0x01, ' ', 'H', 'i', 'g', 'h', ' ', 'V', 'o', 'l', 't', 'a', 'g', 'e', ' ', 16, 0,
+	ANIMATION, 0x86, 0x01, ' ', 'h', 'i', 'g', 'h', ' ', 'v', 'o', 'l', 't', 'a', 'g', 'e', ' ', 16, 0,
 //	ANIMATION, 0x76, NO_SCROLLING, HAPPY_SMILEY, 0,			// Smiley
 //	ANIMATION, 0x76, NO_SCROLLING, 0x1F, 8, 0x3E, 0x08, 0xFE, 0x80, 0x80, 0x19, 0x15, 0x12, 0,	// user defined character
 	ANIMATION, 0x54, 0x08, SPC1, SPC1, HEART, SPC8, SPC1, SPC1, HEART, SPC8, 0,	// Heartbeat
