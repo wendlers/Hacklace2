@@ -79,6 +79,7 @@ class APP_CLASSNAME : public Hacklace_App
 		// ##### enter your member variables here... #####
 		static byte timer;
 		static byte brightness;
+		static byte brightness_save;
 };
 
 
@@ -93,6 +94,7 @@ APP_CLASSNAME APP_NAME;		// create an instance of the app class
 // ##### list your static variables here... #####
 byte 	APP_CLASSNAME::timer;
 byte 	APP_CLASSNAME::brightness;
+byte 	APP_CLASSNAME::brightness_save;
 
 
 /***********
@@ -109,6 +111,7 @@ const unsigned char* APP_CLASSNAME::setup(const unsigned char* ee)
 	HL.setScrollMode(BIDIRECTIONAL, 1);
 	HL.setSpacing(0);
 	HL.printString_P(PSTR(" -=[]=- "));
+	brightness_save = HL.getBrightness();	// remember brightness setting
 	brightness = 0;
 	timer = 0;
 
@@ -138,7 +141,7 @@ void APP_CLASSNAME::finish()
 	// will be called before switching to the next app
 	
 	// ##### enter your cleanup code here... #####
-	HL.setBrightness(0);
+	HL.setBrightness(brightness_save);		// restore former brightness
 }
 
 

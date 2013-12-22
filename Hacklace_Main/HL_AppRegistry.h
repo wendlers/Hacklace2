@@ -39,9 +39,13 @@ Disclaimer:	This software is provided by the copyright holder "as is" and any
 #include "HL_VoltmeterApp.h"
 #include "HL_BatteryMonitorApp.h"
 #include "HL_FreqmeterApp.h"
+#include "HL_CodeLockApp.h"
+#include "HL_ThermometerApp.h"
+#include "HL_JukeboxApp.h"
 #include "HL_DisplayApp.h"
 #include "HL_ExampleApp.h"
 #include "HL_DownloadApp.h"
+#include "HL_DisplayTestApp.h"
 
 
 // list of all available apps
@@ -53,12 +57,12 @@ const Hacklace_App* app_registry[MAX_APPS] PROGMEM = {
 	&VoltmeterApp,			// app-ID 4
 	&BatteryMonitorApp,		// app-ID 5
 	&FreqmeterApp,			// app-ID 6
-	&ExampleApp,			// app-ID 7
+	&ThermometerApp,		// app-ID 7
 	&ExampleApp,			// app-ID 8
 	&ExampleApp,			// app-ID 9
 	&ExampleApp,			// app-ID 10
 	&ExampleApp,			// app-ID 11
-	&ExampleApp,			// app-ID 12
+	&JukeboxApp,			// app-ID 12
 	&ExampleApp,			// app-ID 13
 	&ExampleApp,			// app-ID 14
 	&ExampleApp,			// app-ID 15
@@ -66,8 +70,8 @@ const Hacklace_App* app_registry[MAX_APPS] PROGMEM = {
 	&ExampleApp,			// app-ID 17
 	&ExampleApp,			// app-ID 18
 	&ExampleApp,			// app-ID 19
-	&ExampleApp,			// app-ID 20
-	&ExampleApp,			// app-ID 21
+	&CodeLockApp,			// app-ID 20
+	&DisplayTestApp,		// app-ID 21
 	&ExampleApp,			// app-ID 22
 	&ExampleApp,			// app-ID 23
 	&ExampleApp,			// app-ID 24
@@ -77,7 +81,8 @@ const Hacklace_App* app_registry[MAX_APPS] PROGMEM = {
 	&ExampleApp,			// app-ID 28
 	&ExampleApp,			// app-ID 29
 	&ExampleApp,			// app-ID 30
-//	&DisplayApp			// app-ID 31 ResetApp
+//	&DisplayApp			// app-ID 31 ResetApp (using HL as serial display)
+//	&DisplayTestApp			// app-ID 31 ResetApp (testing the dot-matrix display)
 	&DownloadApp			// app-ID 31 ResetApp
 					// This app is called after a system reset (NULL -> no app is called)
 };

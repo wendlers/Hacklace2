@@ -6,7 +6,7 @@
 /**********************************************************************************
 
 Description:		Arduino library for operating the Hacklace(TM).
-					The Hacklace library uses Timer1.
+					The Hacklace library uses Timer1 which is running at 1 MHz.
 					
 Author:				Frank Andre
 Copyright 2013:		Frank Andre
@@ -50,7 +50,8 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 // speed and delay conversion
 // Convert speed / delay parameters from range 0..15 to actual speed / delay values.
 const byte dly_conv[16] PROGMEM = {0, 1, 2, 3, 4, 5, 6, 8, 10, 13, 16, 20, 25, 32, 40, 50};
-const byte spd_conv[16] PROGMEM = {100, 73, 53, 39, 28, 21, 15, 11, 8, 6, 5, 4, 3, 2, 1, 0};
+//const byte spd_conv[16] PROGMEM = {100, 73, 53, 39, 28, 21, 15, 11, 8, 6, 5, 4, 3, 2, 1, 0};
+const byte spd_conv[16] PROGMEM = {52, 43, 35, 28, 22, 17, 13, 10, 8, 6, 5, 4, 3, 2, 1, 0};
 
 // small decimal digits
 const byte minidigits[] PROGMEM = {	0x1F, 0x11, 0x1F,	// 0
@@ -81,7 +82,7 @@ byte 			Hacklace::current_column;	// number of currently displayed column
 byte			Hacklace::dimming;			// range 1..DISP_MAX_DIM with 1 = brightest
 unsigned int	Hacklace::viewport;			// defines which section of the display memory appears 
 											// on the dot matrix (viewport ... viewport+DISP_COLS-1)
-volatile byte	Hacklace::sysTimerFlag;		// flag that is set by the system timer interrupt
+volatile byte	Hacklace::sync_flags;		// flags for synchronization
 byte			Hacklace::button;			// button event
 unsigned int 	Hacklace::cursor;			// index of first free byte after current  
 											// display memory content (0 = empty display)
@@ -93,7 +94,6 @@ byte			Hacklace::scroll_speed;		// scrolling speed (0 = fastest)
 byte			Hacklace::scroll_delay;		// delay (number of scrolling steps) before scrolling cycle restarts
 byte			Hacklace::delay_counter;	// counter for scroll delays (counting down to zero)
 byte 			Hacklace::scroll_timer;
-byte			Hacklace::scroll_sync;		// flag that is set if end of scrolling range has been reached
 byte			Hacklace::btn_mask;			// mask to extract button state
 byte			Hacklace::pb_timer;			// push button timer
 
@@ -109,11 +109,10 @@ unsigned long	Hacklace::interval_accu;	// accumulated intervals between INT1 int
 
 void Hacklace::initialize(void)
 {
-	sysTimerFlag = 0;
+	sync_flags = 0;
 	current_column = 0;
 	scroll_timer = 0;
 	delay_counter = 0;
-	scroll_sync = 0;
 	button = 0;
 	btn_mask = BTN_MASK;
 	
@@ -135,7 +134,7 @@ void Hacklace::initialize(void)
 	OCR1A = OCR1A_CYCLE_TIME;
 	OCR1B = OCR1B_CYCLE_TIME;
 	TCCR1A = 0;							// timer mode = normal
-	TCCR1B = (2<<CS10);					// prescaler = 1:8
+	TCCR1B = (T1_PRESC<<CS10);			// set prescaler
 	TCCR1C = 0;
 	TIFR1 = (1<<OCF1A)|(1<<OCF1B);		// clear compare-match interrupt flags
 	TIMSK1 = (1<<OCIE1A)|(1<<OCIE1B);	// enable compare-match interrupts
@@ -153,6 +152,20 @@ void Hacklace::setBrightness(byte br)
 	// limit range to 0..DISP_MAX_BRIGHT
 	if (br > DISP_MAX_BRIGHT)  br = DISP_MAX_BRIGHT;
 	dimming = DISP_MAX_DIM >> br;
+}
+
+
+byte Hacklace::getBrightness()
+{
+	byte br, dim;
+
+	br = 3;
+	dim = dimming >> 1;
+	while (dim > 0) {
+		br--;
+		dim >>= 1;
+	}
+	return(br);
 }
 
 
@@ -346,12 +359,13 @@ void Hacklace::setPixel(byte x, byte y, byte pen)
 }
 
 
-void Hacklace::drawRect(byte x1, byte y1, byte x2, byte y2, byte pen)
+void Hacklace::drawRect(word x1, byte y1, word x2, byte y2, byte pen)
 {
 	// Draw a filled rectangle.
 	// pen >= 1  turn LEDs on;   pen = 0  turn LEDs off
 
-	byte i, mask;
+	word i;
+	byte mask;
 	
 	if (x1 > (DISP_MAX - 1)) { x1 = (DISP_MAX - 1); }
 	if (x2 > (DISP_MAX - 1)) { x2 = (DISP_MAX - 1); }
@@ -377,8 +391,7 @@ void Hacklace::print0_99(byte val, byte y)
 	// print a value in the range 0..99 using two mini-digits
 	
 	byte		i, bcd;
-	const byte* ptr;
-	
+
 	if (val > 99) { val = 99; }
 
 	// convert val to BCD format
@@ -423,7 +436,9 @@ void Hacklace::scrollDisplay()
 			delay_counter--;
 		}
 		else {
-			scroll_sync = 1;
+			ATOMIC_BLOCK(ATOMIC_FORCEON) {
+				sync_flags |= SCROLL_SYNC;	// set scroll flag
+			}
 			delay_counter = scroll_delay;			// reload delay counter
 			if (mode & SCROLL_BIDIR) {
 				scroll_mode = mode ^ SCROLL_BACK;	// reverse direction
@@ -492,21 +507,57 @@ void Hacklace::enableButton2()
 
 byte Hacklace::sysTimerHasElapsed()
 {
-	return(sysTimerFlag);
+	if (sync_flags & SYS_TIMER_SYNC) { return(1); }
+	else { return(0); }
 }
 
 
 byte Hacklace::scrollSync()
 {
-	if (scroll_sync)	{ scroll_sync = 0; return(1); }
+	if (sync_flags & SCROLL_SYNC)	{ 
+		ATOMIC_BLOCK(ATOMIC_FORCEON) {
+			sync_flags &= ~SCROLL_SYNC;
+			return(1);
+		}
+	}
 	return(0);
+}
+
+
+byte Hacklace::columnSync()
+{
+	if (sync_flags & COLUMN_SYNC)	{ 
+		ATOMIC_BLOCK(ATOMIC_FORCEON) {
+			sync_flags &= ~COLUMN_SYNC;
+			return(1);
+		}
+	}
+	return(0);
+}
+
+
+void Hacklace::disableDisplay()
+{
+	DDRC = 0;								// disable column outputs
+	DDRD &= ~PORTD_COL_MASK;
+	TCCR1B = 0;								// stop timer 1
+}
+
+
+void Hacklace::enableDisplay()
+{
+	DDRC = DDRC_INIT;						// enable column outputs
+	DDRD |= PORTD_COL_MASK;
+	TCCR1B = (T1_PRESC<<CS10);				// run timer 1
 }
 
 
 void Hacklace::run()
 {
-	sysTimerFlag = 0;						// clear flag
-
+	ATOMIC_BLOCK(ATOMIC_FORCEON) {
+		sync_flags &= ~SYS_TIMER_SYNC;		// clear system timer flag
+	}
+	
 	if (scroll_timer) {
 		scroll_timer--;
 	}
@@ -605,7 +656,7 @@ float Hacklace::getPeriod()
 }
 
 
-void Hacklace::outputColumn()
+inline void Hacklace::outputColumn()
 {
 	byte pixels;		// pixel content of current column
 	byte col_bit;		// bit pattern in which the bit for the current column is set
@@ -626,16 +677,17 @@ void Hacklace::outputColumn()
 	// turn current column on
 	PORTC = ~col_bit;
 	PORTD &= ~((col_bit>>2) & PORTD_COL_MASK);
+	sync_flags |= COLUMN_SYNC;
 }
 
 
-void Hacklace::setSysTimerFlag()
+inline void Hacklace::setSysTimerFlag()
 {
-	sysTimerFlag = 1;
+	sync_flags |= SYS_TIMER_SYNC;
 }
 
 
-void Hacklace::int1Handler()
+inline void Hacklace::int1Handler()
 {
 	word tcnt_new, interval;
 	

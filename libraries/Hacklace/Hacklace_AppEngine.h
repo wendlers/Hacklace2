@@ -37,11 +37,14 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 
 // version
 #define HL_VERSION_MAJOR	0
-#define HL_VERSION_MINOR	3
+#define HL_VERSION_MINOR	4
 
 // start and end address of text/animation data in EEPROM
 #define EE_START_ADDR		0x000
 #define EE_END_ADDR			0x3FF
+
+// EEPROM address of parameters for reset app
+#define EE_RESET_PARAMS		0x001
 
 // app IDs
 #define ANIMATION			0
@@ -51,6 +54,10 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 #define VOLTMETER			4
 #define BATT_MONITOR		5
 #define FREQMETER			6
+#define THERMOMETER			7
+#define JUKEBOX				12
+#define CODE_LOCK			20
+#define DISPLAY_TEST		21
 #define EXAMPLE_APP			30
 #define RESET_APP			31
 
@@ -66,28 +73,28 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 // default EEPROM content
 const char ee_default[] PROGMEM = {
 	ANIMATION, 0x76, 0x01, ' ', 'H', 'a', 'c', 'k', 'l', 'a', 'c', 'e', '2', ' ', SKULL, SPC1, 0,
-	ANIMATION, 0x85, 0x01, ' ', 'A', 'r', 'd', 'u', 'i', 'n', 'o', '-', 'k', 'o', 'm', 'p', 'a', 't', 'i', 'b', 'e', 'l', SPC8, 0,
-	ANIMATION, 0x85, 0x01, ' ', 'I', ' ', HEART, ' ', 'y', 'o', 'u', ' ', 'a', 'l', 'l', '!', ' ', ' ', 0,
-	ANIMATION, 0x86, 0x01, ' ', 'h', 'i', 'g', 'h', ' ', 'v', 'o', 'l', 't', 'a', 'g', 'e', ' ', 16, 0,
+	ANIMATION, 0x85, 0x01, ' ', 'A', 'r', 'd', 'u', 'i', 'n', 'o', '-', 'c', 'o', 'm', 'p', 'a', 't', 'i', 'b', 'l', 'e', SPC8, 0,
+	ANIMATION, 0x85, 0x01, ' ', 'I', ' ', HEART, ' ', 'e', 'l', 'e', 'c', 't', 'r', 'o', 'n', 'i', 'c', 's', '!', ' ', ' ', 0,
+	ANIMATION, 0x86, 0x01, ' ', 'H', 'i', 'g', 'h', ' ', 'V', 'o', 'l', 't', 'a', 'g', 'e', ' ', FLASH, 0,
 //	ANIMATION, 0x76, NO_SCROLLING, HAPPY_SMILEY, 0,			// Smiley
 //	ANIMATION, 0x76, NO_SCROLLING, 0x1F, 8, 0x3E, 0x08, 0xFE, 0x80, 0x80, 0x19, 0x15, 0x12, 0,	// user defined character
 	ANIMATION, 0x54, 0x08, SPC1, SPC1, HEART, SPC8, SPC1, SPC1, HEART, SPC8, 0,	// Heartbeat
 	ANIMATION, 0x83, 0x21, 5, ' ', 6, ' ', 7, ' ', 8, 0,	// Monster
 	ANIMATION, 0xB0, 0x08, ANI(1), 0,						// Fire
-	ANIMATION, 0x99, 0x01, ANI(2), 0,						// Plug-in
+	ANIMATION, 0xA9, 0x01, ANI(2), 0,						// Plug-in
 	ANIMATION, 0x8B, 0x08, ANI(3), 0,						// Arrow
-	ANIMATION, 0x99, 0x08, SPC8, ANI(4), SPC8, 0,			// Ball
+	ANIMATION, 0xA9, 0x18, SPC8, ANI(4), SPC8, 0,			// Ball
 	ANIMATION, 0xA8, 0x01, ANI(5), 0,						// ECG
 	ANIMATION, 0x8A, 0x08, ANI(6), 0,						// Droplet
 	ANIMATION, 0x88, 0x01, 0x7F, ANI(7), 0x7F, 0,			// Train
 	ANIMATION, 0x88, 0x08, ANI(8), 0,						// Pong
-	ANIMATION, 0x45, 0x08, ANI(9), 0,						// Wink
+	ANIMATION, 0x35, 0x08, ANI(9), 0,						// Wink
 	ANIMATION, 0x7A, 0x08, ANI(10), 0x7F, 0,				// TNT
-	ANIMATION, 0x24, 0x08, ANI(11), 0,						// House
-//	ANIMATION, 0x38, 0x08, ANI(12), 0,						// Drowsy
+	ANIMATION, 0x14, 0x08, ANI(11), 0,						// House
+//	ANIMATION, 0x28, 0x08, ANI(12), 0,						// Drowsy
 	ANIMATION, 0x50, 0x08, ANI(14), 0,						// Dancer
-	ANIMATION, 0x45, 0x08, ANI(15), 0,						// Snow
-//	ANIMATION, 0x35, 0x08, ANI(16), 0,						// Sunset
+	ANIMATION, 0x35, 0x08, ANI(15), 0,						// Snow
+//	ANIMATION, 0x25, 0x08, ANI(16), 0,						// Sunset
 	ANIMATION, 0x80, 0x08, ANI(17), 0,						// Radar
 	ANIMATION, 0xA0, 0x08, ANI(18), 0,						// Propeller
 	ANIMATION, 0x79, 0x08, ANI(19), 0,						// Flat cat
@@ -104,9 +111,13 @@ const char ee_default[] PROGMEM = {
 //	GAME_OF_LIFE,  4, 30, 0x00, 0x42, 0x3C, 0x24, 0x24, 0x3C, 0x42, 0x00,		// 4 cycle
 //	GAME_OF_LIFE, 12, 15, 0x00, 0x00, 0x24, 0x2C, 0x20, 0x00, 0x00, 0x00,		// bubble
 //	GAME_OF_LIFE, 16, 15, 0x50, 0x08, 0x08, 0x48, 0x38, 0x00, 0x00, 0x00,		// spaceship
-	VOLTMETER, 39,
+	VOLTMETER, 39,							// needs extra hardware (resistor)
 	FREQMETER,
-	BATT_MONITOR,
+	JUKEBOX,								// needs extra hardware (piezo buzzer + 100nF)
+	THERMOMETER,							// needs extra hardware (resistor + thermistor)
+//	CODE_LOCK, 2, 0x12, 0x34, 0x99, 0x99,	// needs extra hardware (keypad + servo)
+	DISPLAY_TEST,
+	BATT_MONITOR,							// needs extra hardware (2 resistors)
 	END_OF_LIST
 };
 
@@ -127,7 +138,6 @@ class Hacklace_AppEngine : public Hacklace
 
 	private:
 		static const unsigned char*	ee_ptr;
-//###		static Hacklace_App*		app_registry[MAX_APPS];	// list of all available apps
 		static Hacklace_App*		app;					// pointer to current app
 		
 		static void enterPowerDown();

@@ -123,16 +123,21 @@ const unsigned char* APP_CLASSNAME::setup(const unsigned char* ee)
 
 void APP_CLASSNAME::run()
 {
-	word	volt;		// voltage in millivolts
+	word	ana;							// adc reading
+	word	volt;							// voltage in millivolts
 	byte    h;
 	
 	if (timer > 0) { timer--;  return; }
 	timer = (byte)(0.5 + UPDATE_INTERVAL * 100) - 1;
 
+											// to avoid disturbances of the a/d conversion
+	HL.disableDisplay();					// turn display off
 	digitalWrite(3, LOW);					// turn voltage divider on
-	delayMicroseconds(200);					// wait for voltage to stabilize
-	volt = (word) (0.5 + ADC_FACTOR * (float) analogRead(A6));
+	delay(1);								// wait 1 ms for voltage to stabilize
+	ana = analogRead(A6);
 	digitalWrite(3, HIGH);					// turn voltage divider off
+	HL.enableDisplay();						// turn display on again
+	volt = (word) (0.5 + ADC_FACTOR * (float) ana);
 	
 	for (h = 0; h < 5; h++) {
 		if ( volt > pgm_read_word(&VoltThresholds[h]) ) break;

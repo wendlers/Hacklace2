@@ -43,15 +43,16 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 #define DISP_MAX_BRIGHT		3			// brightness range 0..DISP_MAX_BRIGHT
 										// max. dimming is (1/DISP_MAX_DIM) of full brightness
 #define DISP_MAX_DIM		(1<<DISP_MAX_BRIGHT)
-#define DISP_FRAME_RATE		200			// number of dot matrix images per second
+#define DISP_FRAME_RATE		100			// number of dot matrix images per second
 #define OCR1A_CYCLE_TIME	(int)(0.5 + F_CPU / (8.0 * DISP_FRAME_RATE * DISP_COLS * DISP_MAX_DIM))
 
 // display memory
-#define DISP_MAX			1000		// size of display memory in bytes (1 byte = 1 column, range 5..200)
+#define DISP_MAX			1000		// size of display memory in bytes (1 byte = 1 column)
 
 // system timer
 #define SYS_TIMER_FREQ  	100			// frequency of system timer (Hz)
 #define OCR1B_CYCLE_TIME	(int)(0.5 + F_CPU / (8.0 * SYS_TIMER_FREQ))
+#define T1_PRESC			2			// timer 1 prescaler value (1:8, do not change)
 
 // i/o initialization
 #define DDRB_INIT			0b00111111
@@ -86,6 +87,11 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 #define BTN2_PRESSED		(BUTTON2 | PB_PRESS)
 #define BTN2_RELEASED		(BUTTON2 | PB_RELEASE)
 #define BTN2_LONGPRESSED	(BUTTON2 | PB_LONGPRESS)
+
+// synchronization flags
+#define COLUMN_SYNC			(1<<0)	// flag signalling that a new column has been displayed
+#define SCROLL_SYNC			(1<<1)	// flag that is set if end of scrolling range has been reached
+#define SYS_TIMER_SYNC		(1<<2)	// flag that is set with every system timer cycle
 
 // pin definitions (do not change)
 #define	RXD		RX
@@ -148,6 +154,7 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 #define DIAMOND				24
 #define CLOCK				25
 #define BELL				26
+#define SPACE				32			// 3 column space
 #define SPC1				0xA0		// 1 column space
 #define SPC8				0x7F		// 8 column space
 #define RAW					RAW_MODE_CHAR
@@ -198,6 +205,7 @@ class Hacklace
 		static void initialize();
 		static void copyToEeprom(const char* flash_ptr, unsigned int size);
 		static void setBrightness(byte br);
+		static byte getBrightness();
 		static void setSpacing(byte spc);
 		static void setScrollSpeed(byte speed, byte delay);
 		static void setScrollMode(byte dir, byte inc);
@@ -214,10 +222,13 @@ class Hacklace
 		static void printMiniDigit(byte val, byte y);
 		static byte getPixel(byte x, byte y);
 		static void setPixel(byte x, byte y, byte pen);
-		static void drawRect(byte x1, byte y1, byte x2, byte y2, byte pen);
+		static void drawRect(word x1, byte y1, word x2, byte y2, byte pen);
 		static void print0_99(byte val, byte y);
 		static byte sysTimerHasElapsed();
 		static byte scrollSync();
+		static byte columnSync();
+		static void disableDisplay();
+		static void enableDisplay();
 		static void run();
 		static void goToSleep();
 		static void powerDown();
@@ -247,10 +258,9 @@ class Hacklace
 		static byte		scroll_delay;	// delay (number of scrolling steps) before scrolling cycle restarts
 		static byte		delay_counter;	// counter for scroll delays (counting down to zero)
 		static byte 	scroll_timer;
-		static byte		scroll_sync;	// flag that is set if end of scrolling range has been reached
 		static byte		btn_mask;		// mask to extract button state
 		static byte		pb_timer;		// push button timer
-		static volatile byte	sysTimerFlag;	// flag that is set by the system timer interrupt
+		static volatile byte	sync_flags;
 //		static byte		overfl_cnt;		// timer 1 overflow counter
 		static word		tcnt_old;
 		static word		int1_cnt;		// interrupt INT1 counter

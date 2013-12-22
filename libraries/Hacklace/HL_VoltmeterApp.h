@@ -122,10 +122,16 @@ const unsigned char* APP_CLASSNAME::setup(const unsigned char* ee)
 void APP_CLASSNAME::run()
 {
 	float	volt;							// voltage in millivolts
+	word	ana;							// adc reading
 	char	st[7];
 	
 	if (HL.scrollSync()) {					// wait until end of scrolling occurs
-		volt = ratio * ADC2MV_FACTOR * (float) analogRead(A7);
+											// to avoid disturbances of the a/d conversion
+		HL.disableDisplay();				// turn display off
+		delay(1);							// wait some time for the system to settle
+		ana = analogRead(A7);
+		HL.enableDisplay();					// turn display on again
+		volt = ratio * ADC2MV_FACTOR * (float) ana;
 		itoa((unsigned int)(volt + 0.5), st, 10);	// volt is rounded to next integer
 		HL.cursorHome();
 		HL.printString_P(PSTR("V="));

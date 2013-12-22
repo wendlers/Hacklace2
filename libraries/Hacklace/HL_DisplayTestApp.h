@@ -1,17 +1,12 @@
 /*
- * HL_DisplayApp.cpp
+ * HL_DisplayTestApp.cpp
  *
  */ 
 
 /**********************************************************************************
 
-Description:		Hacklace Display App
+Description:		Hacklace Display Test App
 
-					Receive a string from the serial interface and display it.
-					Characters are interpreted according to character font. 
-					To enter binary values each byte must be preceeded by 0x1F.
-					Use <CR> or <LF> to clear the display.
-					
 Author:				Frank Andre
 Copyright 2013:		Frank Andre
 License:			see "license.md"
@@ -49,10 +44,10 @@ extern Hacklace_AppEngine HL;
 	#undef APP_CLASSNAME
 #endif
 
-#define APP_NAME		DisplayApp
+#define APP_NAME		DisplayTestApp
 #define APP_CLASSNAME	CONCAT(APP_NAME, _class)
 
-const byte DisplayAppIcon[9] PROGMEM =	{8, 0xFF, 0x81, 0xA5, 0xBD, 0xA5, 0x99, 0x81, 0xFF};
+#define R_MAX			7
 
 
 /*********
@@ -67,7 +62,10 @@ class APP_CLASSNAME : public Hacklace_App
 		void finish();
 
 	private:
-		static byte raw_mode;
+		static byte timer;
+		static byte timer_reload;
+		static byte state;
+		static byte brightness;
 };
 
 
@@ -78,7 +76,10 @@ APP_CLASSNAME APP_NAME;		// create an instance of the app class
  * static class variables *
  **************************/
 
-byte 	APP_CLASSNAME::raw_mode;
+byte 	APP_CLASSNAME::timer;
+byte 	APP_CLASSNAME::timer_reload;
+byte 	APP_CLASSNAME::state;
+byte 	APP_CLASSNAME::brightness;
 
 
 /***********
@@ -87,45 +88,51 @@ byte 	APP_CLASSNAME::raw_mode;
 
 const unsigned char* APP_CLASSNAME::setup(const unsigned char* ee)
 {
+	HL.setScrollMode(NO_SCROLLING, 1);
+	timer_reload = 10;						// defines speed of pattern changes
+	timer = timer_reload;					// start timer
+	state = 0;
+	brightness = 0;
 	HL.clearDisplay();
-//	HL.printImage_P(DisplayAppIcon);
-	HL.setScrollSpeed(7, 7);
-	HL.setScrollMode(FORWARD, 1);
-	HL.disableButton2();
-	raw_mode = 0;
-	Serial.begin(9600);		// baud rate = 9600
+	HL.setBrightness(brightness);
 	return( ee );
 }
 
 
 void APP_CLASSNAME::run()
 {
-	byte ch;
-	
-	while( Serial.available() ) {
-		ch = Serial.read();
-		if (raw_mode) {							// ----- raw / binary mode --------
-			HL.printByte(ch);
-			raw_mode = 0;
+	if (timer) {
+		timer--;
+		return;
+	}
+
+	HL.clearDisplay();
+	if (state < 16) {
+		if (state == 0) {
+			if (brightness == 0) { brightness = DISP_MAX_BRIGHT; }
+			else { brightness = 0; }
+			HL.setBrightness(brightness);
 		}
-		else {									// ----- ASCII character mode -----
-			if ( (ch == 13) || (ch == 10) ) {	// <CR> or <LF> ?
-				HL.clearDisplay();
-			}
-			else if (ch == RAW_MODE_CHAR) {
-				raw_mode = 1;
-			}
-			else {
-				HL.printChar(ch);
-				HL.printByte(0);				// space between characters
-			}
+		if (state < 8) {
+			HL.drawRect(state, 0, state, 7, 1);
 		}
+		else {
+			HL.drawRect(0, state-8, 7, state-8, 1);
+		}
+		timer = timer_reload;
+		state++;
+	}
+	else {
+		HL.drawRect(0, 0, 7, 7, 1);
+		timer = 5 * timer_reload;
+		state = 0;
 	}
 }
 
 
 void APP_CLASSNAME::finish()
 {
-	Serial.end();
-	HL.enableButton2();
+	HL.setBrightness(0);
 }
+
+

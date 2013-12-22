@@ -61,8 +61,6 @@ Hacklace_App*			Hacklace_AppEngine::app;					// pointer to current app
 
 void Hacklace_AppEngine::initialize()
 {
-	byte app_id;
-	
 	Hacklace::initialize();
 
 	printChar(HL2_LOGO);
@@ -74,14 +72,9 @@ void Hacklace_AppEngine::initialize()
 	app = (Hacklace_App*) pgm_read_word(&app_registry[RESET_APP]);	// get ResetApp
 	if (app) {
 		cursorHome();
-		app->setup(EE_START_ADDR);
+		app->setup((const unsigned char*)EE_RESET_PARAMS);
 	}
-
 	ee_ptr = EE_START_ADDR;
-	app_id = eeprom_read_byte(ee_ptr);						// peek first app_id
-	if (app_id == 0xFF) {									// eeprom empty?
-		copyToEeprom(ee_default, sizeof(ee_default));		// -> load default data
-	}
 }
 
 
@@ -105,7 +98,6 @@ Hacklace_App* Hacklace_AppEngine::getApp(byte app_id)
 {
 	if (app_id >= MAX_APPS) { return (NULL); }
 	else { return ( (Hacklace_App*) pgm_read_word(&app_registry[app_id]) ); }
-//###	else { return (app_registry[app_id]); }
 }
 
 
