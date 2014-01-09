@@ -718,7 +718,7 @@ FLASHDATA chr_255[] = {0x04, 0x18, 0xA2, 0xA0, 0x7A};	// .
 
 // character table
 
-FLASHDATA* font[] PROGMEM = {
+FLASHDATA* const font[] = {
 	chr_000, chr_001, chr_002, chr_003, chr_004, chr_005, chr_006, chr_007,
 	chr_008, chr_009, chr_010, chr_011, chr_012, chr_013, chr_014, chr_015,
 	chr_016, chr_017, chr_018, chr_019, chr_020, chr_021, chr_022, chr_023,
