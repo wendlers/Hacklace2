@@ -140,7 +140,7 @@ const byte chromatic_scales[]  PROGMEM = {
 };
 
 // a list of all available melodies
-const byte* melody[]  PROGMEM = {
+const byte* const melody[]  PROGMEM = {
 	bach, jingle_bells, chromatic_scales
 };
 

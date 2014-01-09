@@ -46,9 +46,67 @@ Hacklace_AppEngine HL;		// instantiate a Hacklace_AppEngine
  *************/
 
 // app registry
-extern const Hacklace_App* app_registry[MAX_APPS];
+extern const Hacklace_App* const app_registry[MAX_APPS];
 extern const Hacklace_App* DownloadApp_ptr;
 
+// default eeprom content
+const byte ee_default[] PROGMEM = {
+	ANIMATION, 0x76, 0x01, ' ', 'H', 'a', 'c', 'k', 'l', 'a', 'c', 'e', '2', ' ', SKULL, SPC1, 0,
+	ANIMATION, 0x85, 0x01, ' ', 'A', 'r', 'd', 'u', 'i', 'n', 'o', '-', 'c', 'o', 'm', 'p', 'a', 't', 'i', 'b', 'l', 'e', SPC8, 0,
+	ANIMATION, 0x85, 0x01, ' ', 'I', ' ', HEART, ' ', 'e', 'l', 'e', 'c', 't', 'r', 'o', 'n', 'i', 'c', 's', '!', ' ', ' ', 0,
+	ANIMATION, 0x86, 0x01, ' ', 'H', 'i', 'g', 'h', ' ', 'V', 'o', 'l', 't', 'a', 'g', 'e', ' ', FLASH, 0,
+//	ANIMATION, 0x76, NO_SCROLLING, HAPPY_SMILEY, 0,			// smiley
+//	ANIMATION, 0x76, NO_SCROLLING, 0x1F, 8, 0x3E, 0x08, 0xFE, 0x80, 0x80, 0x19, 0x15, 0x12, 0,	// user defined character
+	ANIMATION, 0x54, 0x08, SPC1, SPC1, HEART, SPC8, SPC1, SPC1, HEART, SPC8, 0,	// heartbeat
+	ANIMATION, 0x83, 0x21, 5, ' ', 6, ' ', 7, ' ', 8, 0,	// monster
+	ANIMATION, 0xB0, 0x08, ANI(1), 0,						// fire
+	ANIMATION, 0xA9, 0x01, ANI(2), 0,						// plug & socket
+	ANIMATION, 0x8B, 0x08, ANI(3), 0,						// arrow
+	ANIMATION, 0xA9, 0x18, SPC8, ANI(4), SPC8, 0,			// ball
+	ANIMATION, 0xA8, 0x01, ANI(5), 0,						// ECG
+	ANIMATION, 0x8A, 0x08, ANI(6), 0,						// droplet
+	ANIMATION, 0x88, 0x01, 0x7F, ANI(7), 0x7F, 0,			// train
+	ANIMATION, 0x88, 0x08, ANI(8), 0,						// pong
+	ANIMATION, 0x35, 0x08, ANI(9), 0,						// wink
+	ANIMATION, 0x7A, 0x08, ANI(10), 0x7F, 0,				// TNT
+	ANIMATION, 0x14, 0x08, ANI(11), 0,						// house
+	ANIMATION, 0x57, 0x08, ANI(12), 0,						// creeper
+	ANIMATION, 0xA5, 0x08, ANI(13), 0,						// tunnel
+	ANIMATION, 0x36, 0x08, ANI(14), 0,						// snow
+	ANIMATION, 0x50, 0x08, ANI(15), 0,						// dancer
+	ANIMATION, 0x36, 0x08, ANI(16), 0,						// fish
+	ANIMATION, 0x80, 0x08, ANI(17), 0,						// radar
+	ANIMATION, 0xA0, 0x08, ANI(18), 0,						// propeller
+	ANIMATION, 0x79, 0x08, ANI(19), 0,						// flat cat
+	ANIMATION, 0xA0, 0x08, ANI(20), 0,						// squares
+	ANIMATION, 0x35, 0x08, ANI(21), ANI(22), 0,				// Tetris
+	ANIMATION, 0x67, 0x08, ANI(23), 0,						// rocket
+	ANIMATION, 0x90, 0x08, ANI(24), 0,						// spectrum
+	ANIMATION, 0xA0, 0x08, ANI(25), 0,						// checkers
+	ANIMATION, 0x79, 0x08, ANI(26), 0,						// headbang
+//	ANIMATION, 0x5A, 0x08, ANI(31), 0,						// French Revolution
+	EXAMPLE_APP,
+	SPIRAL,
+	COUNTER,
+	GAME_OF_LIFE, 32, 15, 0x04, 0x05, 0x06, 0x00, 0x00, 0x00, 0x00, 0x00,		// glider
+	GAME_OF_LIFE,  5, 50, 0x00, 0x24, 0x5A, 0x24, 0x24, 0x5A, 0x24, 0x00,		// oktagon
+	GAME_OF_LIFE,  6, 10, 0x00, 0x04, 0x6C, 0x38, 0x1C, 0x36, 0x20, 0x00,		// pulsate
+//	GAME_OF_LIFE, 32, 12, 0x00, 0x04, 0x05, 0x06, 0x10, 0x60, 0x30, 0x00,		// mix
+//	GAME_OF_LIFE, 36, 12, 0x00, 0x00, 0x00, 0x10, 0x38, 0x08, 0x00, 0x00,		// grow
+//	GAME_OF_LIFE,  4, 30, 0x00, 0x42, 0x3C, 0x24, 0x24, 0x3C, 0x42, 0x00,		// 4 cycle
+//	GAME_OF_LIFE, 12, 15, 0x00, 0x00, 0x24, 0x2C, 0x20, 0x00, 0x00, 0x00,		// bubble
+//	GAME_OF_LIFE, 16, 15, 0x50, 0x08, 0x08, 0x48, 0x38, 0x00, 0x00, 0x00,		// spaceship
+	VOLTMETER, 39,							// needs extra hardware (resistor)
+	FREQMETER,
+	STOPWATCH,
+	JUKEBOX,								// needs extra hardware (piezo buzzer + 100nF)
+	THERMOMETER,							// needs extra hardware (resistor + thermistor)
+	CODE_LOCK, 2, 0x12, 0x34, 0x99, 0x99,	// needs extra hardware (keypad + servo)
+	DISPLAY_TEST,
+	BATT_MONITOR,							// needs extra hardware (2 resistors)
+	END_OF_LIST
+};
+const unsigned int ee_default_size = sizeof(ee_default);
 
 // static class variables
 const unsigned char*	Hacklace_AppEngine::ee_ptr;
@@ -78,12 +136,12 @@ void Hacklace_AppEngine::initialize()
 }
 
 
-void Hacklace_AppEngine::copyToEeprom(const char* flash_ptr, unsigned int size)
+void Hacklace_AppEngine::copyToEeprom(const byte* flash_ptr, unsigned int size)
 {
 	// Copy memory content from flash to EEROM.
 	
 	unsigned int i;
-	char ch;
+	byte ch;
 	byte* ee_ptr;
 
 	ee_ptr = EE_START_ADDR;

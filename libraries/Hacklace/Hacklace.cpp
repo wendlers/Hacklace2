@@ -50,7 +50,6 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 // speed and delay conversion
 // Convert speed / delay parameters from range 0..15 to actual speed / delay values.
 const byte dly_conv[16] PROGMEM = {0, 1, 2, 3, 4, 5, 6, 8, 10, 13, 16, 20, 25, 32, 40, 50};
-//const byte spd_conv[16] PROGMEM = {100, 73, 53, 39, 28, 21, 15, 11, 8, 6, 5, 4, 3, 2, 1, 0};
 const byte spd_conv[16] PROGMEM = {52, 43, 35, 28, 22, 17, 13, 10, 8, 6, 5, 4, 3, 2, 1, 0};
 
 // small decimal digits

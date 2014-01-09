@@ -250,7 +250,8 @@ void APP_CLASSNAME::interpreter(byte ch)
 
 		case LOAD_DEFAULTS:
 			if (ch == DEFAULT2_CHAR) {
-				HL.copyToEeprom(ee_default, sizeof(ee_default));
+//				HL.copyToEeprom(ee_default, sizeof(ee_default));
+				HL.copyToEeprom(ee_default, ee_default_size);
 				HL.clearDisplay();
 				HL.printChar(0x1F);							// print 'ok'
 			}

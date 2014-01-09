@@ -41,15 +41,18 @@ Disclaimer:	This software is provided by the copyright holder "as is" and any
 #include "HL_FreqmeterApp.h"
 #include "HL_CodeLockApp.h"
 #include "HL_ThermometerApp.h"
+#include "HL_StopwatchApp.h"
 #include "HL_JukeboxApp.h"
 #include "HL_DisplayApp.h"
 #include "HL_ExampleApp.h"
 #include "HL_DownloadApp.h"
 #include "HL_DisplayTestApp.h"
 
+// make the app_registry globally available
+extern const Hacklace_App* const app_registry[MAX_APPS];
 
-// list of all available apps
-const Hacklace_App* app_registry[MAX_APPS] PROGMEM = {
+// list of all apps
+const Hacklace_App* const app_registry[MAX_APPS] PROGMEM = {
 	&AnimationApp,			// app-ID 0
 	&SpiralApp,			// app-ID 1
 	&CounterApp,			// app-ID 2
@@ -58,7 +61,7 @@ const Hacklace_App* app_registry[MAX_APPS] PROGMEM = {
 	&BatteryMonitorApp,		// app-ID 5
 	&FreqmeterApp,			// app-ID 6
 	&ThermometerApp,		// app-ID 7
-	&ExampleApp,			// app-ID 8
+	&StopwatchApp,			// app-ID 8
 	&ExampleApp,			// app-ID 9
 	&ExampleApp,			// app-ID 10
 	&ExampleApp,			// app-ID 11
