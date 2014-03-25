@@ -1,3 +1,6 @@
+\# Hacklace2 default configuration file
+\# software version 06
+
 HL										\# initialization sequence
 
 \#\00 76 01\ my new message \00\		\# remove comment to add this message
