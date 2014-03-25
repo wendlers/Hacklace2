@@ -186,7 +186,7 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
     __x__;                                                 \
   })
 
-// _BV implemented as a loop-up table
+// _BV implemented as a look-up table
 const byte bit_value_table[8] PROGMEM = {1, 2, 4, 8, 16, 32, 64, 128};	// bit_value look-up table
 #define BV_LOOKUP(bit)		pgm_read_byte(&bit_value_table[bit])
 

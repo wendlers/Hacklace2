@@ -299,7 +299,8 @@ const char* Hacklace::printStr(const char* st, byte src_mem_type)
 		} else {
 			printChar(ch);
 		}
-		// insert spacing after a printable character but not after fixed spaces or animations
+		// insert spacing after a printable or user defined character
+		// but not after fixed spaces or animations
 		if ((ch < SPC8) || (ch > SPC1)) {
 			for (i=0; i<spacing; i++) { printByte(0); }
 		}

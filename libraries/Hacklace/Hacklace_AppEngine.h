@@ -37,7 +37,7 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 
 // version
 #define HL_VERSION_MAJOR	0
-#define HL_VERSION_MINOR	5
+#define HL_VERSION_MINOR	6
 
 // start and end address of text/animation data in EEPROM
 #define EE_START_ADDR		0x000
