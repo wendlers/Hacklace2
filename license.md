@@ -1,7 +1,7 @@
 HACKLACE SOFTWARE LICENSE
 =========================
 
-Copyright holder 2013 of the hacklace software is Frank Andre.
+Copyright holder 2013 of the hacklace software is Frank Andre, Ludwigshafen.
 
 
 ### License:
