@@ -50,8 +50,6 @@ extern Hacklace_AppEngine HL;
 #define APP_NAME		CounterApp
 #define APP_CLASSNAME	CONCAT(APP_NAME, _class)
 
-#define R_MAX			7
-
 
 /*********
  * class *

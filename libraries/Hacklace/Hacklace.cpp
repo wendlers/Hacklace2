@@ -72,6 +72,19 @@ const byte minidigits[] PROGMEM = {	0x1F, 0x11, 0x1F,	// 0
 								};
 
 
+/**************
+ * data types *
+ **************/
+
+typedef union {
+	unsigned long u32;
+	struct {
+		word u16lo;
+		word u16hi;
+	};
+} ulong_hilo;
+
+
 /**************************
  * static class variables *
  **************************/
@@ -96,7 +109,7 @@ byte 			Hacklace::scroll_timer;
 byte			Hacklace::btn_mask;			// mask to extract button state
 byte			Hacklace::pb_timer;			// push button timer
 
-//byte			Hacklace::overfl_cnt;		// timer 1 overflow counter
+word			Hacklace::overfl_cnt;		// timer 1 overflow counter
 word			Hacklace::tcnt_old;
 word			Hacklace::int1_cnt;			// interrupt INT1 counter
 unsigned long	Hacklace::interval_accu;	// accumulated intervals between INT1 interrupts
@@ -604,14 +617,14 @@ void Hacklace::powerDown()
 
 void Hacklace::enableFreqCounter()
 {
-//	overfl_cnt    = 0;
+	overfl_cnt    = 0;
 	int1_cnt      = 0;
 	interval_accu = 0;
 	EICRA = (2 << ISC10);					// generate interrupt on falling edge on PD3
 	EIFR  = (1 << INT1);					// clear interrupt flag INT1
 	EIMSK = (1 << INT1);					// enable interrupts on PD3 (= INT1)
-//	TIFR1  |= (1<<TOV1);					// clear timer 1 overflow interrupt flag
-//	TIMSK1 |= (1<<TOIE1);					// enable timer 1 overflow interrupts	
+	TIFR1  |= (1<<TOV1);					// clear timer 1 overflow interrupt flag
+	TIMSK1 |= (1<<TOIE1);					// enable timer 1 overflow interrupts	
 }
 
 
@@ -622,6 +635,18 @@ void Hacklace::disableFreqCounter()
 }
 
 
+void Hacklace::getFreqCounter(unsigned long* time, word* count)
+// Return accumulated time interval and number of interrupts.
+{
+	ATOMIC_BLOCK(ATOMIC_FORCEON) {
+		*time = interval_accu;
+		interval_accu = 0;
+		*count = int1_cnt;
+		int1_cnt = 0;
+	}
+}
+
+
 float Hacklace::getFrequency()
 // Return (average) interrupt frequency (in Hertz).
 // Note: Make sure there have been less than 65536 interrupts between two calls of this function.
@@ -629,12 +654,8 @@ float Hacklace::getFrequency()
 	unsigned long	interval;
 	word			cnt;
 	
-	ATOMIC_BLOCK(ATOMIC_FORCEON) {
-		interval = interval_accu;
-		interval_accu = 0;
-		cnt = int1_cnt;
-		int1_cnt = 0;
-	}
+	getFreqCounter(&interval, &cnt);
+	if (interval == 0) { return(0); }
 	return( 1000000.0 * (float) cnt / ((float) interval) );
 }
 
@@ -646,13 +667,23 @@ float Hacklace::getPeriod()
 	unsigned long	interval;
 	word			cnt;
 	
-	ATOMIC_BLOCK(ATOMIC_FORCEON) {
-		interval = interval_accu;
-		interval_accu = 0;
-		cnt = int1_cnt;
-		int1_cnt = 0;
-	}
+	getFreqCounter(&interval, &cnt);
+	if (cnt == 0) { return(0); }
 	return( ((float) interval) / (float) cnt );
+}
+
+
+word Hacklace::getInt1Count()
+// Return number of int1 interrupts.
+// Note: Make sure there have been less than 65536 interrupts between two calls.
+// Note: Call enableFreqCounter() before using this function.
+{
+	word cnt;
+	
+	ATOMIC_BLOCK(ATOMIC_FORCEON) {
+		cnt = int1_cnt;
+	}
+	return( cnt );
 }
 
 
@@ -689,13 +720,32 @@ inline void Hacklace::setSysTimerFlag()
 
 inline void Hacklace::int1Handler()
 {
-	word tcnt_new, interval;
-	
+	ulong_hilo	temp;
+	word		tcnt_new;
+
+/*
 	tcnt_new = TCNT1;
 	interval = tcnt_new - tcnt_old;
 	interval_accu += interval;
 	int1_cnt++;
 	tcnt_old = tcnt_new;
+*/
+	tcnt_new = TCNT1;
+	temp.u16hi = overfl_cnt;
+	overfl_cnt = 0;
+	temp.u16lo = tcnt_new;
+	temp.u32 -= (unsigned long) tcnt_old;
+	interval_accu += temp.u32;
+	tcnt_old = tcnt_new;
+	int1_cnt++;
+}
+
+
+inline void Hacklace::t1overflowHandler()
+{
+	if (overfl_cnt < 0xFFFF) {
+		overfl_cnt++;
+	}
 }
 
 
@@ -719,6 +769,7 @@ ISR(TIMER1_COMPB_vect)
 	Hacklace::setSysTimerFlag();
 }
 
+
 ISR(PCINT2_vect)
 // pin change interrupt (for wake-up)
 {
@@ -733,12 +784,8 @@ ISR(INT1_vect)
 }
 
 
-/*
 ISR(TIMER1_OVF_vect)
 // timer 1 overflow
 {
-	if (Hacklace::overfl_cnt < 255) {
-		Hacklace::overfl_cnt++;
-	}
+	Hacklace::t1overflowHandler();
 }
-*/

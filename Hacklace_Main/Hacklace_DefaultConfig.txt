@@ -42,12 +42,13 @@ HL										\# initialization sequence
 \03 20 0F 04 05 06 00 00 00 00 00\		\# game-of-life app
 \03 05 32 00 24 5A 24 24 5A 24 00\		\# game-of-life app
 \03 06 0A 00 04 6C 38 1C 36 20 00\		\# game-of-life app
-\04 27\									\# voltmeter
-\06\									\# frequency meter
 \08\									\# stopwatch
+\04 27\									\# voltmeter (resistor = 39k)
+\06\									\# frequency meter
 \0C\									\# jukebox
 \07\									\# thermometer
-\14 02 12 34 99 99\						\# code lock
-\15\									\# display test
+\14 02 12 34 99 99\						\# code lock (code 1234 and 9999)
+\09 42 08\								\# speedometer (circumference = 2114 mm)
 \05\									\# battery monitor
+\15\									\# display test
 \FF\									\# --- end of list ---

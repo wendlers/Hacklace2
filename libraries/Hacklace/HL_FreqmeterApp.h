@@ -7,8 +7,8 @@
 
 Description:		Hacklace Freqmeter App
 
-					Measure the frequency at Pin PD3. Will work from 16 Hz up to 
-					approx. 10 kHz.
+					Measure the frequency at Pin PD3. Will work up to approx. 20 kHz
+					and down to the mHz range.
 
 Author:				Frank Andre
 Copyright 2013:		Frank Andre
@@ -97,14 +97,17 @@ const unsigned char* APP_CLASSNAME::setup(const unsigned char* ee)
 
 void APP_CLASSNAME::run()
 {
-	char			st[7];
+	char	st[7];
 
 	if (HL.scrollSync()) {					// wait until end of scrolling occurs
-		itoa((word)(HL.getFrequency() + 0.5), st, 10);
-		HL.cursorHome();
-		HL.printString_P(PSTR("f="));
-		HL.printString(st);
-		//HL.printString_P(PSTR("Hz"));
+		if (HL.getInt1Count()) {			// frequency is only valid if there has been
+											// at least one INT1 interrupt
+			itoa((word)(HL.getFrequency() + 0.5), st, 10);
+			HL.cursorHome();
+			HL.printString_P(PSTR("f="));
+			HL.printString(st);
+			//HL.printString_P(PSTR("Hz"));
+		}
 	}
 }
 

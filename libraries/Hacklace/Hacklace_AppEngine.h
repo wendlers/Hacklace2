@@ -37,7 +37,7 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 
 // version
 #define HL_VERSION_MAJOR	0
-#define HL_VERSION_MINOR	6
+#define HL_VERSION_MINOR	7
 
 // start and end address of text/animation data in EEPROM
 #define EE_START_ADDR		0x000
@@ -56,7 +56,13 @@ Disclaimer:			This software is provided by the copyright holder "as is" and any
 #define FREQMETER			6
 #define THERMOMETER			7
 #define STOPWATCH			8
+#define SPEEDOMETER			9
 #define JUKEBOX				12
+#define FOUR_WINS			13
+#define SNAKE				14
+#define JUMP				15
+#define FROGGER				16
+#define TICTACTOE			17
 #define CODE_LOCK			20
 #define DISPLAY_TEST		21
 #define EXAMPLE_APP			30

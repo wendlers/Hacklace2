@@ -18,8 +18,8 @@ Description:	Hacklace Example App
 					
 		3. Implement the functionality of your app. Method "setup" is called 
 		once to initialize your app. The "run" method is called periodically 
-		and will do most of the show. When you switch to the next app the 
-		"finish" method is called once to clean-up your app.
+		(every 10 ms) and will do most of the show. When you switch to the 
+		next app the "finish" method is called once to clean-up your app.
 					
 Author:		Frank Andre
 Copyright 2013:	Frank Andre
@@ -125,7 +125,7 @@ void APP_CLASSNAME::run()
 	// run executes periodically
 	
 	// ##### enter your application code here... #####
-	// increase brightness every 25 calls
+	// increase brightness every 15 calls
 	if (timer > 0) { timer--; }
 	else {
 		timer = 15;

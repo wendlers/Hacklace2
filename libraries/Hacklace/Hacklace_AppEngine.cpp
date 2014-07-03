@@ -55,8 +55,6 @@ const byte ee_default[] PROGMEM = {
 	ANIMATION, 0x85, 0x01, ' ', 'A', 'r', 'd', 'u', 'i', 'n', 'o', '-', 'c', 'o', 'm', 'p', 'a', 't', 'i', 'b', 'l', 'e', SPC8, 0,
 	ANIMATION, 0x85, 0x01, ' ', 'I', ' ', HEART, ' ', 'e', 'l', 'e', 'c', 't', 'r', 'o', 'n', 'i', 'c', 's', '!', ' ', ' ', 0,
 	ANIMATION, 0x86, 0x01, ' ', 'H', 'i', 'g', 'h', ' ', 'V', 'o', 'l', 't', 'a', 'g', 'e', ' ', FLASH, 0,
-//	ANIMATION, 0x76, NO_SCROLLING, HAPPY_SMILEY, 0,			// smiley
-//	ANIMATION, 0x76, NO_SCROLLING, 0x1F, 8, 0x3E, 0x08, 0xFE, 0x80, 0x80, 0x19, 0x15, 0x12, 0,	// user defined character
 	ANIMATION, 0x54, 0x08, SPC1, SPC1, HEART, SPC8, SPC1, SPC1, HEART, SPC8, 0,	// heartbeat
 	ANIMATION, 0x83, 0x21, 5, ' ', 6, ' ', 7, ' ', 8, 0,	// monster
 	ANIMATION, 0xB0, 0x08, ANI(1), 0,						// fire
@@ -96,14 +94,16 @@ const byte ee_default[] PROGMEM = {
 //	GAME_OF_LIFE,  4, 30, 0x00, 0x42, 0x3C, 0x24, 0x24, 0x3C, 0x42, 0x00,		// 4 cycle
 //	GAME_OF_LIFE, 12, 15, 0x00, 0x00, 0x24, 0x2C, 0x20, 0x00, 0x00, 0x00,		// bubble
 //	GAME_OF_LIFE, 16, 15, 0x50, 0x08, 0x08, 0x48, 0x38, 0x00, 0x00, 0x00,		// spaceship
+	STOPWATCH,
 	VOLTMETER, 39,							// needs extra hardware (resistor)
 	FREQMETER,
-	STOPWATCH,
 	JUKEBOX,								// needs extra hardware (piezo buzzer + 100nF)
 	THERMOMETER,							// needs extra hardware (resistor + thermistor)
 	CODE_LOCK, 2, 0x12, 0x34, 0x99, 0x99,	// needs extra hardware (keypad + servo)
-	DISPLAY_TEST,
+	SPEEDOMETER, 66, 8,						// needs extra hardware (reed relais + magnet)
+											// circumference = 2114 mm (26" wheel, ETRTO 54-559)
 	BATT_MONITOR,							// needs extra hardware (2 resistors)
+	DISPLAY_TEST,
 	END_OF_LIST
 };
 const unsigned int ee_default_size = sizeof(ee_default);

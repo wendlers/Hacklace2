@@ -54,7 +54,7 @@ extern Hacklace_AppEngine HL;
 
 #define SPEAKER			3		// connect speaker to pin 3 (= PD3)
 
-#define BPM				240		// beats per minute (range 3..200)
+#define BPM				240		// beats per minute (range 3..240)
 #define BEAT_DURATION	(byte)(0.5 + 6000.0 / ((float)BPM * 8.0))
 
 // states

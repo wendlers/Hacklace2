@@ -191,7 +191,6 @@ const byte bit_value_table[8] PROGMEM = {1, 2, 4, 8, 16, 32, 64, 128};	// bit_va
 #define BV_LOOKUP(bit)		pgm_read_byte(&bit_value_table[bit])
 
 
-
 /***********
  * classes *
  ***********/
@@ -237,11 +236,14 @@ class Hacklace
 		static void enableButton2();
 		static void enableFreqCounter();
 		static void disableFreqCounter();
+		static void getFreqCounter(unsigned long* time, word* count);
 		static float getFrequency();
 		static float getPeriod();
+		static word getInt1Count();
 		inline static void outputColumn();
 		inline static void setSysTimerFlag();
 		inline static void int1Handler();
+		inline static void t1overflowHandler();
 
 	protected:
 		static unsigned int	viewport;	// defines which section of the display memory appears 
@@ -261,7 +263,7 @@ class Hacklace
 		static byte		btn_mask;		// mask to extract button state
 		static byte		pb_timer;		// push button timer
 		static volatile byte	sync_flags;
-//		static byte		overfl_cnt;		// timer 1 overflow counter
+		static word		overfl_cnt;		// timer 1 overflow counter
 		static word		tcnt_old;
 		static word		int1_cnt;		// interrupt INT1 counter
 		static unsigned long	interval_accu;	// accumulated intervals between INT1 interrupts

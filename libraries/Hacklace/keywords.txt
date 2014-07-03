@@ -46,8 +46,10 @@ disableButton2	KEYWORD2
 enableButton2	KEYWORD2
 enableFreqCounter	KEYWORD2
 disableFreqCounter	KEYWORD2
+getFreqCounter	KEYWORD2
 getFrequency	KEYWORD2
 getPeriod	KEYWORD2
+getInt1Count	KEYWORD2
 copyToEeprom	KEYWORD2
 displayMemory	KEYWORD2
 button	KEYWORD2
