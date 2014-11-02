@@ -18,14 +18,14 @@ __Usage__
 
 Build: 
 
-  make
+`make`
   
 Firmware could be found under ``Hacklace_Main/build-mega328``.
 
 Clean:
 
-  make clean
-  
+`make clean`
+
 __Dowanload__
 
 TODO!
