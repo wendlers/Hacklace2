@@ -12,7 +12,7 @@ __Prerequisites__
 
 For Ubuntu/Mint: 
 
-sudo apt-get install arduino arduino-make
+`sudo apt-get install arduino arduino-make`
 
 __Usage__
 
