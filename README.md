@@ -26,6 +26,8 @@ Clean:
 
 `make clean`
 
-__Dowanload__
+__FW Upload__
 
-TODO!
+E.g. with Hacklace connected to ttyUSB0:
+
+`MONITOR_PORT=/dev/ttyUSB0 make upload`
