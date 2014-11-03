@@ -2,13 +2,13 @@ Hacklace2 Simple Configuration Utility
 ======================================
 2014-11-03, sw@kaltpost.de
 
-Simple Python (v2.7) script to configure the (Hacklace2)[http://wiki.fab4u.de/wiki/Hacklace/en].
+Simple Python (v2.7) script to configure the [Hacklace2](http://wiki.fab4u.de/wiki/Hacklace/en).
 
 
 __Prerequisites__
 
-* (Hacklace2)[http://wiki.fab4u.de/wiki/Hacklace/en]
-* (Hack-Key)[http://www.wiki.fab4u.de/wiki/Hack-Key] other 3.3v USB to serial converter
+* [Hacklace2](http://wiki.fab4u.de/wiki/Hacklace/en)
+* [Hack-Key](http://www.wiki.fab4u.de/wiki/Hack-Key) other 3.3v USB to serial converter
 * Python with pyserial installed
 
 
