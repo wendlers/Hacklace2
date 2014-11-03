@@ -1,7 +1,7 @@
 Hacklace2
 =========
 
-Fork of Arduino firmware for [http://wiki.fab4u.de/wiki/Hacklace/en](Hacklace2). 
+Fork of Arduino firmware for [Hacklace2](http://wiki.fab4u.de/wiki/Hacklace/en). 
 
 * Added Makefile to compile with [arduino-make](https://github.com/sudar/Arduino-Makefile) outside Arduino IDE
 
