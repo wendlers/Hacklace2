@@ -3,7 +3,8 @@
 
 HL										\# initialization sequence
 
-\#\00 76 01\ my new message \00\		\# remove comment to add this message
+\00 76 01\ Hallo Anni \00\
+\00 76 01\ Hallo Aime \00\
 \00 76 01\ Hacklace2 \03 A0 00\
 \00 85 01\ Arduino-compatible\7F 00\
 \00 85 01\ I \04\ electronics!  \00\

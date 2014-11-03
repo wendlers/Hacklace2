@@ -41,7 +41,7 @@ void setup() {
   
   // only for debugging purposes: 
   // ALWAYS restore default EEPROM content after a reset
-  //HL.copyToEeprom(ee_default, sizeof(ee_default));
+  // HL.copyToEeprom(ee_default, ee_default_size);
 }
 
 
