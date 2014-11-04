@@ -6,6 +6,7 @@ Fork of Arduino firmware for [Hacklace2](http://wiki.fab4u.de/wiki/Hacklace/en).
 * Added Makefile to compile with [arduino-make](https://github.com/sudar/Arduino-Makefile) outside Arduino IDE
 * Added simple python script (``tools/hl2cfg``) to configure HL2
 * Started firmware to connect HL2 with ESP8266 serial to wifi module for over the air texting
+* Added 3D printable case (see ``case``)
 
 
 __Prerequisites__
