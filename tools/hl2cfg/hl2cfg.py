@@ -32,6 +32,7 @@ import time
 
 DESCRIPTION = 'Configure Hacklace2 through serial line.'
 
+
 APPS = {
     'ani': 0,
     'spiral': 1,
@@ -44,22 +45,75 @@ APPS = {
     'stopwatch': 8,
     'speed': 9,
     'juke': 12,
+    'fourewins': 13,
+    'snake': 14,
+    'jump': 15,
+    'frogger': 16,
+    'ttt': 17,
+    'cl': 20,
     'disptest': 21,
     'usr1': 30,
     'reset': 31
 }
 
 ICONS = {
-    'HL2': 0x00,
+    'HL2_LOGO': 0,
+    'HAPPY_SMILEY': 1,
+    'SAD_SMILEY': 2,
+    'SKULL': 3,
+    'HEART': 4,
+    'INVADER1': 5,
+    'INVADER2': 6,
+    'INVADER3': 7,
+    'GHOST': 8,
+    'FOX': 9,
+    'NOTES': 11,
+    'NOTE': 12,
+    'GLASS': 14,
+    'MOBILE': 15,
+    'FLASH': 16,
+    'LIGHTBULB': 17,
+    'MALE': 20,
+    'FEMALE': 21,
+    'PHONE': 22,
+    'STICKFIG': 23,
+    'DIAMOND': 24,
+    'CLOCK': 25,
+    'BELL': 26,
+    'SPACE': 32,
+    'SPC1': 0xA0,
+    'SPC8': 0x7F,
     ':-)': 0x01,
-    ':-(': 0x02,
-    'hatguy': 0x03,
-    'heart': 0x04
+    ':-(': 0x02
 }
 
 ANIMS = {
-    'arrow': 0x83,
-    'train': 0x87
+    'FIRE': 1,
+    'PLUG': 2,
+    'ARROW': 3,
+    'BALL': 4,
+    'ECG': 5,
+    'DROPLET': 6,
+    'TRAIN': 7,
+    'PONG': 8,
+    'WINK': 9,
+    'TNT': 10,
+    'HOUSE': 11,
+    'CREEPER': 12,
+    'TUNNEL': 13,
+    'SNOW': 14,
+    'DANCER': 15,
+    'FISH': 16,
+    'RADAR': 17,
+    'PROPELLER': 18,
+    'FLATCAT': 19,
+    'SUQARES': 20,
+    'TETRIS': 21,
+    'ROCKET': 23,
+    'SPECTRUM': 24,
+    'CHECKERS': 25,
+    'HEADBANG': 26,
+    'REVOLUTION': 31
 }
 
 class HacklaceSerCom:
@@ -106,7 +160,7 @@ class HacklaceConf:
         for icon in ICONS:
             # print("icon:", icon)
             old = "[[%s]]" % icon
-            new = "\\%02x\\" % ICONS[icon]
+            new = "\\%02X\\" % ICONS[icon]
             # print("old, new:", old, new)
             _txt = _txt.replace(old, new)
 
@@ -119,7 +173,7 @@ class HacklaceConf:
         for anim in ANIMS:
             # print("anim:", anim)
             old = "{{%s}}" % anim
-            new = "\\%02x\\" % ANIMS[anim]
+            new = "\\%02X\\" % (ANIMS[anim] + 128)
             # print("old, new:", old, new)
             _txt = _txt.replace(old, new)
 
@@ -135,13 +189,13 @@ class HacklaceConf:
             _cfg = '76 01'
 
         if _cfg is not None and txt is not None and dat is not None:
-            cfg_line = '\\%02x %s\\ %s \\%s 00' % (app_id, _cfg, self.__replace_anims(self.__replace_icons(txt)), dat)
+            cfg_line = '\\%02X %s\\ %s \\%s 00' % (app_id, _cfg, self.__replace_anims(self.__replace_icons(txt)), dat)
         elif _cfg is not None and txt is not None:
-            cfg_line = '\\%02x %s\\ %s \\00' % (app_id, _cfg, self.__replace_anims(self.__replace_icons(txt)))
+            cfg_line = '\\%02X %s\\ %s \\00' % (app_id, _cfg, self.__replace_anims(self.__replace_icons(txt)))
         elif _cfg is not None:
-            cfg_line = '\\%02x %s' % (app_id, _cfg)
+            cfg_line = '\\%02X %s' % (app_id, _cfg)
         else:
-            cfg_line = '\\%02x' % app_id
+            cfg_line = '\\%02X' % app_id
 
         self.com.reset()
         self.com.send("\eHL%s FF\\" % cfg_line.replace('\\ \\', ' '))
@@ -169,6 +223,12 @@ def main():
     parser.add_argument('--nosend',
                         action="store_true",
                         help='don\'t send any data')
+    parser.add_argument('--listicons',
+                        action="store_true",
+                        help='list available icon macros')
+    parser.add_argument('--listanims',
+                        action="store_true",
+                        help='list available animation macros')
 
     parser.add_argument('--app',
                         choices=APPS.keys(),
@@ -186,6 +246,15 @@ def main():
     args = parser.parse_args()
 
     try:
+
+        if args.listicons:
+            print("Icon macros [[<macro>]]: %s" % ICONS.keys())
+
+        if args.listanims:
+            print("Animation macros {{<anim>}}: %s" % ANIMS.keys())
+
+        if args.listicons or args.listanims:
+            exit(0)
 
         # see if args combination is valid
         if (args.app is None and args.cfgfile is None) or (args.app is not None and args.cfgfile is not None):

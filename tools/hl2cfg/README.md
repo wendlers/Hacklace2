@@ -36,9 +36,17 @@ Add icons:
 
 `./hl2cfg.py --app ani --cfg '70 01' --txt 'hl2cfg.py was here [[:-)]] ...'`
 
+Show all available icon macros:
+
+`./hl2cfg.py --listicons`
+
 Use predefined animation
 
-`./hl2cfg.py --app ani --cfg '30 08' --txt '{{train}}'`
+`./hl2cfg.py --app ani --cfg '30 08' --txt '{{TRAIN}}'`
+
+Show all available animation macros:
+
+`./hl2cfg.py --listanims`
 
 Run game-of-life:
 
@@ -47,3 +55,7 @@ Run game-of-life:
 Show spiral:
 
 `./hl2cfg.py --app spiral`
+
+Don't send anything to the device, just print the config-string:
+
+`./hl2cfg.py --app ani --cfg '30 08' --txt '{{TRAIN}}' --nosend`
