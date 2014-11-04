@@ -1,0 +1,7 @@
+\# Hacklace2 default configuration file
+\# software version 06
+
+HL									\# initialization sequence
+
+\1E\
+\FF\									\# --- end of list ---
