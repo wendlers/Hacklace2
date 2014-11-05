@@ -6,9 +6,9 @@
  * sw@kaltpost.de
  */
 
-show(0);
+// show(0);
 // show_exploded(1);
-// print_case(1);
+print_case(0);
 // hl2(1);
 
 module show(with_headers)
