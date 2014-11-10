@@ -102,13 +102,11 @@ const unsigned char* APP_CLASSNAME::setup(const unsigned char* ee)
 	Serial.begin(115200);
 
 	// connect to AP
-	sendAt("AT+CWJAP=\"FBWELAN\",\"supersonic\"\r", true);
+	sendAt("AT+CWJAP=\"XYZ\",\"pass\"\r", true);
 	delay(5000);
 
-	sendAt("AT+CWJAP=\"FBWELAN\",\"supersonic\"\r", false);
-
 	HL.clearDisplay();
-	HL.printString_P(PSTR("FBWLAN"));
+	HL.printString_P(PSTR("XZY"));
 
 	return( ee );
 }
